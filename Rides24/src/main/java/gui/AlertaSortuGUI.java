@@ -45,7 +45,7 @@ public class AlertaSortuGUI extends JFrame {
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
 
-	private Traveler traveler;
+	private Traveler traveler; //traveller
 
 	private static BLFacade appFacadeInterface;
 
