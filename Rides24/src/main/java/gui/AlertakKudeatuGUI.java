@@ -27,7 +27,7 @@ public class AlertakKudeatuGUI extends JFrame {
 	private JPanel buttonPanel;
 
 	public static void setBussinessLogic(BLFacade afi) {
-		appFacadeInterface = afi;
+		appFacadeInterface = afi; //
 	}
 
 	public AlertakKudeatuGUI(String username) {
