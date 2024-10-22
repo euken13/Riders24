@@ -479,18 +479,7 @@ public class DataAccess {
 	public boolean gauzatuEragiketa(String username, double amount, boolean deposit) {
 		try {
 			db.getTransaction().begin();
-			User user = hacerOperacion(username, amount, deposit);
-				db.merge(user);
-				db.getTransaction().commit();
-				return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			db.getTransaction().rollback();
-			return false;
-		}
-	}
-	private User hacerOperacion(String username, double amount, boolean deposit) {
-		User user = getUser(username);
+			User user = getUser(username);
 			double currentMoney = user.getMoney();
 			if (deposit) {
 				user.setMoney(currentMoney + amount);
@@ -500,9 +489,16 @@ public class DataAccess {
 				else
 					user.setMoney(currentMoney - amount);
 			}
-		return user;
+				db.merge(user);
+				db.getTransaction().commit();
+				return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			db.getTransaction().rollback();
+			return false;
+		}
 	}
-
+	
 	public void addMovement(User user, String eragiketa, double amount) {
 		try {
 			db.getTransaction().begin();
@@ -737,12 +733,9 @@ public class DataAccess {
 		return era;
 	}
 
-	public boolean erreklamazioaBidali(ErreklamazioaBidaliParameter parameterObject) {
+	public boolean erreklamazioaBidali(Complaint erreklamazioa) {
 		try {
 			db.getTransaction().begin();
-
-			Complaint erreklamazioa = new Complaint(parameterObject.getNor(), parameterObject.getNori(), parameterObject.getGaur(),
-					parameterObject.getBooking(), parameterObject.getTextua(), parameterObject.isAurk());
 			db.persist(erreklamazioa);
 			db.getTransaction().commit();
 			return true;
