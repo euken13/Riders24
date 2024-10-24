@@ -623,10 +623,7 @@ public class DataAccess {
 	public List<Booking> getBookingFromDriver(String username) {
 		try {
 			db.getTransaction().begin();
-			TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
-					Driver.class);
-			query.setParameter("username", username);
-			Driver driver = query.getSingleResult();
+			Driver driver = getDriverSingleResult(username);
 
 			List<Ride> rides = driver.getCreatedRides();
 			List<Booking> bookings = new ArrayList<>();
@@ -679,23 +676,17 @@ public class DataAccess {
 		}
 	}
 
-	public List<Ride> getRidesByDriver(String username) {
+	public List<Ride> getRidesByDriver(String username) { //Refactorizado por Mikel
 		try {
 			db.getTransaction().begin();
-			TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
-					Driver.class);
-			query.setParameter("username", username);
-			Driver driver = query.getSingleResult();
-
+			Driver driver = getDriverSingleResult(username);
 			List<Ride> rides = driver.getCreatedRides();
 			List<Ride> activeRides = new ArrayList<>();
-
 			for (Ride ride : rides) {
 				if (ride.isActive()) {
 					activeRides.add(ride);
 				}
 			}
-
 			db.getTransaction().commit();
 			return activeRides;
 		} catch (Exception e) {
@@ -703,6 +694,14 @@ public class DataAccess {
 			db.getTransaction().rollback();
 			return null;
 		}
+	}
+	
+	public Driver getDriverSingleResult(String username) {
+		TypedQuery<Driver> query = db.createQuery("SELECT d FROM Driver d WHERE d.username = :username",
+				Driver.class);
+		query.setParameter("username", username);
+		Driver driver = query.getSingleResult();
+		return driver;
 	}
 
 	public boolean addCar(String username, Car kotxe) {
